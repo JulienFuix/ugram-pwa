@@ -1,0 +1,53 @@
+{
+  "host": "localhost",
+  "port": 3030,
+  "protocol": "https",
+  "public": "../public/",
+  "paginate": {
+    "default": 10,
+    "max": 50
+  },
+  "authentication": {
+    "entity": "user",
+	"origins": ["https://ugram.makefile.cloud/"],
+    "service": "users",
+    "secret": "32ZyYB3QtPQpYQhlLgBSJBMiJGU=",
+    "authStrategies": ["jwt", "local", "oauth"],
+    "jwtOptions": {
+      "header": {
+        "typ": "access"
+      },
+      "audience": "https://ugram-api.makefile.cloud",
+      "issuer": "feathers",
+      "algorithm": "HS256",
+      "expiresIn": "1d"
+    },
+    "local": {
+      "usernameField": "email",
+      "passwordField": "password"
+    },
+	"oauth": {
+	  "defaults": {
+		"host": "ugram-api.makefile.cloud",
+		"protocol": "https"
+	  },
+	  "origins": ["https://ugram.makefile.cloud/"],
+      "redirect": "https://ugram.makefile.cloud/oauth",
+	  "google": {
+		"key": "782431955324-2abpd2jkr5mhtu3k28u0hiq7fkk3rm1m.apps.googleusercontent.com",
+		"secret": "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",
+		"scope": ["openid", "email", "profile"],
+		"nonce": true
+	  }
+	}
+  },
+  "aws": {
+    "s3": {
+      "bucketUrl": "https://ufood-dev.s3.amazonaws.com/",
+      "accessKeyId": "AKIAVZ44HTOV6POPMRP5",
+      "secretAccessKey": "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",
+      "bucketName": "ufood-dev"
+    }
+  },
+  "postgres": "postgres://user:password@db:5432/database"
+}
