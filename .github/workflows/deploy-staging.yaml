@@ -1,4 +1,4 @@
-name: CI/CD Pipeline - Stagging
+name: CI/CD Pipeline - Staging
 
 on:
   workflow_run:
@@ -9,7 +9,7 @@ on:
 jobs:
   build-docker-image:
     runs-on: ubuntu-latest
-    environment: stagging
+    environment: staging
     permissions:
       contents: read
       packages: write
@@ -36,5 +36,7 @@ jobs:
 
     steps:
     # Deploy to Stagging
-    - name: Deploy APP to stagging
+    - name: Deploy APP to staging
       run: echo ${{ secrets.APIKEY }}
+    - name: Echo value
+      run: echo ${{ vars.TEST_VALUE }}
