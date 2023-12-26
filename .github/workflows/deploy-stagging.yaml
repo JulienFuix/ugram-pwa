@@ -1,9 +1,10 @@
-name: Deploy App
+name: CI/CD Pipeline - Stagging
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["CI/CD Pipeline - Dev"]
+    types:
+      - completed
 
 jobs:
   build-docker-image:
@@ -12,6 +13,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+    if: github.event.workflow_run.conclusion == 'success'
 
     steps:
     - name: Checkout code
