@@ -2,7 +2,7 @@ version: '3'
 
 services:
   api:
-    image: ghcr.io/JulienFuix/ugram-pwa/ugram_api:latest
+    image: ghcr.io/julienfuix/ugram-pwa/ugram_api:latest
     build:
       context: ${API_PATH}
       target: dev
@@ -37,7 +37,7 @@ services:
       - db-data:/var/lib/postgresql/data
 
   client:
-    image: ghcr.io/JulienFuix/ugram-pwa/ugram_web:latest
+    image: ghcr.io/julienfuix/ugram-pwa/ugram_web:latest
     build:
       context: ${WEB_PATH}
       target: dev
