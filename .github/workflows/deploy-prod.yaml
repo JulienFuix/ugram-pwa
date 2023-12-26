@@ -12,32 +12,6 @@ on:
         default: 'true'
 
 jobs:
-  create-release:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      packages: write
-    if: github.event_name == 'workflow_dispatch'  # Permet l'exécution en cas de déclenchement manuel
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Create release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: |
-            Changes in this Release
-            - First Change
-            - Second Change
-          draft: false
-          prerelease: false
-
-
   build-docker-image:
     runs-on: ubuntu-latest
     environment: production
@@ -67,7 +41,7 @@ jobs:
 
     steps:
     # Deploy to Stagging
-    - name: Deploy APP to staging
+    - name: Deploy APP to production
       run: echo ${{ secrets.APIKEY }}
     - name: Echo value
       run: echo ${{ vars.TEST_VALUE }}
