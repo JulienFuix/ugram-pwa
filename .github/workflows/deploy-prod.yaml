@@ -12,31 +12,36 @@ on:
         default: 'true'
 
 jobs:
-  build:
-    name: Create Release
+  create-release:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
+    if: github.event_name == 'workflow_dispatch'  # Permet l'exécution en cas de déclenchement manuel
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+
+      - name: Create release
+        uses: actions/release@v2
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
           body: |
-            Changes in this Release
-            - First Change
-            - Second Change
-          draft: false
-          prerelease: false
+            This is the release notes for release ${{ github.ref }}.
 
+            ## Changes
+
+            * [Change 1]
+            * [Change 2]
+
+            ## Fixes
+
+            * [Fix 1]
+            * [Fix 2]
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-docker-image:
     runs-on: ubuntu-latest
