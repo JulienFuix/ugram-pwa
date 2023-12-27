@@ -23,7 +23,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    # Create Build Push Stop
     - name: Login to GitHub
       run: docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
     # - name: Start containers
@@ -38,9 +37,9 @@ jobs:
   deploy-stagging:
     runs-on: ubuntu-latest
     needs: build-docker-image
+    environment: staging
 
     steps:
-    # Deploy to Stagging
     - name: Deploy APP to staging
       run: echo ${{ secrets.APIKEY }}
     - name: Echo value

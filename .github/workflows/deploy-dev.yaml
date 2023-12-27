@@ -16,7 +16,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    # Create Build Push Stop
     - name: Login to GitHub
       run: docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
     # - name: Start containers
@@ -34,7 +33,6 @@ jobs:
     environment: developpement
 
     steps:
-    # Deploy to dev
     - name: Deploy APP to dev
       uses: actions/checkout@v2
     - name: print var
