@@ -15,7 +15,7 @@ on:
         required: true
       message-tag:
         description: 'Add message to your tag'
-        required: true
+        required: false
 
 
 jobs:
@@ -30,14 +30,20 @@ jobs:
       - uses: rickstaa/action-create-tag@v1
         id: "tag_create"
         with:
-          tag: "latest"
+          tag: ${{ inputs.tag }}
           tag_exists_error: false
-          message: "Latest release"
+          message: ${{ inputs.message-tag }}
   
-      - name: Echo tag with env value
-        run: echo "Tag already present ${{ env.TAG_EXISTS }}"
-      - name: Echo tag with action output
-        run: echo "Tag already present ${{ steps.tag_create.outputs.tag_exists }}"
+      - name: Check if tag exists
+        id: check_tag
+        run: echo "::set-output name=tag_exists::$(git rev-parse -q --verify refs/tags/${{ inputs.tag }} || echo false)"
+      
+      - name: Echo tag exists
+        run: echo "Tag already exists ${{ steps.check_tag.outputs.tag_exists }}"
+      
+      - name: Pipeline condition
+        if: steps.check_tag.outputs.tag_exists != 'true'
+        run: echo "Pipeline can continue"
 
 
 
