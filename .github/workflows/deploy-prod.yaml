@@ -10,15 +10,41 @@ on:
       manual-trigger:
         description: 'Manually trigger the workflow'
         default: 'true'
+      tag:
+        description: 'Create new production tag'
+        required: true
+      message-tag:
+        description: 'Add message to your tag'
+        required: true
+
 
 jobs:
+  create-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: rickstaa/action-create-tag@v1
+        id: "tag_create"
+        with:
+          tag: "latest"
+          tag_exists_error: false
+          message: "Latest release"
+  
+      - name: Echo tag with env value
+        run: echo "Tag already present ${{ env.TAG_EXISTS }}"
+      - name: Echo tag with action output
+        run: echo "Tag already present ${{ steps.tag_create.outputs.tag_exists }}"
+
+
   build-docker-image:
     runs-on: ubuntu-latest
     environment: production
     permissions:
       contents: read
       packages: write
-    if: github.event_name == 'workflow_dispatch' && github.event.workflow_run.conclusion == 'success' # Permet l'exécution en cas de déclenchement manuel
+    if: github.event_name == 'workflow_dispatch'  # Permet l'exécution en cas de déclenchement manuel
 
     steps:
     - name: Checkout code
