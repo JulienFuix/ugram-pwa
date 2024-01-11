@@ -1,10 +1,6 @@
-name: CI/CD Pipeline - Staging
+name: CI/CD Pipeline - Staging Tag
 
 on:
-  workflow_run:
-    workflows: ["CI/CD Pipeline - Dev"]
-    types:
-      - completed
   push:
     tags:
       - '*'
