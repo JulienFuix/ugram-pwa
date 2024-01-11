@@ -12,7 +12,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-    if: github.event_name == 'workflow_dispatch'  # Permet l'exécution en cas de déclenchement manuel
 
     steps:
     - name: Checkout code
