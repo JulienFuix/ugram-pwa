@@ -1,0 +1,44 @@
+name: CI/CD Pipeline - Staging
+
+on:
+  workflow_run:
+    workflows: ["CI/CD Pipeline - Dev"]
+    types:
+      - completed
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build-docker-image:
+    runs-on: ubuntu-latest
+    environment: staging
+    permissions:
+      contents: read
+      packages: write
+    if: github.event_name == 'workflow_dispatch'  # Permet l'exécution en cas de déclenchement manuel
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Login to GitHub
+      run: docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
+    # - name: Start containers
+    #   run: docker-compose -f "docker-compose.staging.yml" build
+    # - name: Pushing all images
+    #   run: docker-compose -f "docker-compose.staging.yml" push
+    # - name: Stop containers
+    #   if: always()
+    #   run: docker-compose -f "docker-compose.staging.yml" down
+
+
+  deploy-stagging:
+    runs-on: ubuntu-latest
+    needs: build-docker-image
+    environment: staging
+
+    steps:
+    - name: Deploy APP to staging
+      run: echo ${{ secrets.APIKEY }}
+    - name: Echo value
+      run: echo ${{ vars.TEST_VALUE }}
