@@ -12,11 +12,12 @@ jobs:
     permissions:
       contents: read
       packages: write
+    env:
+      WEB_PATH: ./client
+      WEB_PORT: 3000
+      NEXT_PUBLIC_API_URL: "http://uri-de-lenv-git"
 
     steps:
-    - uses: oNaiPs/secrets-to-env-action@v1
-      with:
-        secrets: ${{ toJSON(secrets) }}
     - name: Checkout code
       uses: actions/checkout@v2
     - name: Login to GitHub
