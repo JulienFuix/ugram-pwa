@@ -24,11 +24,11 @@ jobs:
       run: docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
     - name: Start containers
       run: docker-compose -f "docker-compose.dev.yml" build
-    # - name: Pushing all images
-    #   run: docker-compose -f "docker-compose.dev.yml" push
-    # - name: Stop containers
-    #   if: always()
-    #   run: docker-compose -f "docker-compose.dev.yml" down
+    - name: Pushing all images
+      run: docker-compose -f "docker-compose.dev.yml" push
+    - name: Stop containers
+      if: always()
+      run: docker-compose -f "docker-compose.dev.yml" down
 
 
   deploy-dev:
