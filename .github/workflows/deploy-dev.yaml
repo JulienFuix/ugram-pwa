@@ -13,9 +13,9 @@ jobs:
       contents: read
       packages: write
     env:
-      WEB_PATH: ./client
-      WEB_PORT: 3000
-      NEXT_PUBLIC_API_URL: "http://uri-de-lenv-git"
+      WEB_PATH: ${{ vars.WEB_PATH }}
+      WEB_PORT: ${{ vars.WEB_PORT }}
+      NEXT_PUBLIC_API_URL: ${{ vars.URI_NEXT }}
 
     steps:
     - name: Checkout code
