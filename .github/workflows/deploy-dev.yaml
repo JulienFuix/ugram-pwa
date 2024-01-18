@@ -18,6 +18,11 @@ jobs:
       NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
 
     steps:
+    - name: "Set environmental variables"
+      run: |
+        echo NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL }} >> $GITHUB_ENV
+        echo WEB_PORT=${{ vars.WEB_PORT }} >> $GITHUB_ENV
+        echo WEB_PATH=${{ vars.WEB_PATH }} >> $GITHUB_ENV
     - name: Checkout code
       uses: actions/checkout@v2
     - name: Login to GitHub
