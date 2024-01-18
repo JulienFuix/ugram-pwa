@@ -6,7 +6,7 @@ const feathers = require("@feathersjs/feathers");
 
 export const app = feathers();
 const auth = require("@feathersjs/authentication-client");
-const socket = io(process.env.NEXT_PUBLIC_API_URL || "", {
+const socket = io(process.env.vars.NEXT_PUBLIC_API_URL || "", {
   transports: ["websocket"],
   forceNew: true,
 });

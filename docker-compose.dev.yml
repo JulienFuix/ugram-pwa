@@ -39,18 +39,18 @@ services:
   client:
     image: ghcr.io/julienfuix/ugram-pwa/ugram_web_dev:latest
     build:
-      context: ${WEB_PATH}
+      context: ${vars.WEB_PATH}
       target: dev
     ports:
-      - ${WEB_PORT}:${WEB_PORT}
+      - ${vars.WEB_PORT}:${vars.WEB_PORT}
     restart: on-failure
     volumes:
-      - ${WEB_PATH}/data:/app/data
-      - ${WEB_PATH}/pages:/app/pages
-      - ${WEB_PATH}/public:/app/public
-      - ${WEB_PATH}/src:/app/src
-      - ${WEB_PATH}/styles:/app/styles
-      - ${WEB_PATH}/.env:/app/.env
+      - ${vars.WEB_PATH}/data:/app/data
+      - ${vars.WEB_PATH}/pages:/app/pages
+      - ${vars.WEB_PATH}/public:/app/public
+      - ${vars.WEB_PATH}/src:/app/src
+      - ${vars.WEB_PATH}/styles:/app/styles
+      - ${vars.WEB_PATH}/.env:/app/.env
 
 networks:
   conection-db:

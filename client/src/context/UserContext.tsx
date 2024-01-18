@@ -8,7 +8,7 @@ import { Follow } from "../types/Follow";
 import { FollowObject } from "../types/FollowObject";
 import { User } from "../types/User";
 import { useAuth } from "./AuthContext";
-const url = process.env.NEXT_PUBLIC_API_URL;
+const url = process.env.vars.NEXT_PUBLIC_API_URL;
 import { AllNotifications } from "../types/AllNotifications";
 import { Notifications } from "../types/Notifications";
 
