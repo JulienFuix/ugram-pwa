@@ -20,4 +20,6 @@ RUN npm i --force
 # RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
 COPY . .
 
-CMD npx next build && npm run start
+RUN npx next build
+
+CMD ["npm", "run", "start"]
