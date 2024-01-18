@@ -18,13 +18,13 @@ jobs:
     #   NEXT_PUBLIC_API_URL: ${{ vars.URI_NEXT }}
 
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
     - name: Export GitHub Environment Variables
       run: |
         mkdir -p $HOME/scripts
         curl -sSL https://raw.githubusercontent.com/${{ github.repository }}/main/.github/scripts/export-env.sh -o $HOME/scripts/export-env.sh
         source $HOME/scripts/export-env.sh
-    - name: Checkout code
-      uses: actions/checkout@v2
     - name: Login to GitHub
       run: docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
     - name: Start containers
