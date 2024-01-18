@@ -32,7 +32,7 @@ export const AuthWrapper = ({ children }: AuthWrapperInterface) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const login = async (email: string, password: string) => {
-      console.log("uri", process.env.vars.NEXT_PUBLIC_API_URL)
+      console.log("uri", process.env.NEXT_PUBLIC_API_URL)
     try {
       setIsLoading(true);
       let res = await app.authenticate({

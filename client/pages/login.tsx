@@ -97,7 +97,7 @@ const Login: NextPage = () => {
                             <span className="text-center text-white">Or</span>
                         </div>
                         <div className="flex flex-row">
-							<a href={process.env.vars.NEXT_PUBLIC_API_URL + "/oauth/google"}>
+							<a href={process.env.NEXT_PUBLIC_API_URL + "/oauth/google"}>
                             	<button className="w-[50px] h-[50px] border-[2px] rounded-full border-[#EFEFEF] border-solid flex justify-center items-center">
                                 	<FaGoogle  className="text-[#db4a39] text-[25px]" />
                         	    </button>

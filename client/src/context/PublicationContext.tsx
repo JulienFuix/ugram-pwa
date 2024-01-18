@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState } from "react";
 import { HTTPRequest } from "../api/feathers-config";
 import { AllPostObject } from "../types/AllPostObject";
 import { Post } from "../types/Post";
-const url = process.env.vars.NEXT_PUBLIC_API_URL;
+const url = process.env.NEXT_PUBLIC_API_URL;
 
 interface PublicationWrapperInterface {
   children: React.ReactNode;

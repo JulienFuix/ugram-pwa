@@ -12,10 +12,10 @@ jobs:
     permissions:
       contents: read
       packages: write
-    # env:
-    #   WEB_PATH: ${{ vars.WEB_PATH }}
-    #   WEB_PORT: ${{ vars.WEB_PORT }}
-    #   NEXT_PUBLIC_API_URL: ${{ vars.URI_NEXT }}
+    env:
+      WEB_PATH: ${{ vars.WEB_PATH }}
+      WEB_PORT: ${{ vars.WEB_PORT }}
+      NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
 
     steps:
     - name: Checkout code

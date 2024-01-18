@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext";
 import { User } from "../types/User";
-const url = process.env.vars.NEXT_PUBLIC_API_URL || "http://localhost:3030";
+const url = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3030";
 
 export const FollowUnfollowButton = (props: {
   id: string | any;
