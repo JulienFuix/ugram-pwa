@@ -5,6 +5,11 @@ on:
     branches:
       - main
 
+env:
+  WEB_PATH: ${{ vars.WEB_PATH }}
+  WEB_PORT: ${{ vars.WEB_PORT }}
+  NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
+
 jobs:
   build-docker-image:
     runs-on: ubuntu-latest
@@ -12,16 +17,14 @@ jobs:
     permissions:
       contents: read
       packages: write
-    env:
-      WEB_PATH: ${{ vars.WEB_PATH }}
-      WEB_PORT: ${{ vars.WEB_PORT }}
-      NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
     - name: Login to GitHub
       run: docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
+    - name: List env vars
+      run: printenv
     - name: Start containers
       run: docker-compose -f "docker-compose.dev.yml" build
     - name: Pushing all images

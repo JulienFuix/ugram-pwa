@@ -8,6 +8,7 @@ COPY package.json package.json
 FROM ugram_laval as dev
 
 RUN corepack enable
+RUN printenv
 RUN npm i
 COPY . .
 CMD ["npm", "run", "dev"]
