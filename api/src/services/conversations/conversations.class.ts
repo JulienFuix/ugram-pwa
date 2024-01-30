@@ -11,7 +11,7 @@ export class Conversations extends Service {
     this.app = app;
   }
   
-  async find(params?: Params): Promise<any> {
+async find(params?: Params): Promise<any> {
     const sequelize = this.app.get("sequelizeClient") as Sequelize;
     const result = await sequelize.models.conversations.findAndCountAll({
         where: {
@@ -20,32 +20,41 @@ export class Conversations extends Service {
                 { receiver_id: params?.user?.id }
             ]
         },
-        include: [{
-            model: sequelize.models.users,
-            attributes: ['id', 'name', 'email', 'username', 'image_id'],
-            as: "receiver",
-            include: [
-                {
-                    model: (this.app.get("sequelizeClient") as Sequelize).models
-                        .files,
-                    as: "image",
-                    attributes: ["url"],
-                },
-            ],
-        },
-        {
-            model: sequelize.models.users,
-            attributes: ['id', 'name', 'email', 'username', 'image_id'],
-            as: "creator",
-            include: [
-                {
-                    model: (this.app.get("sequelizeClient") as Sequelize).models
-                        .files,
-                    as: "image",
-                    attributes: ["url"],
-                },
-            ],
-        }]
+        include: [
+            {
+                model: sequelize.models.users,
+                attributes: ['id', 'name', 'email', 'username', 'image_id'],
+                as: "receiver",
+                include: [
+                    {
+                        model: (this.app.get("sequelizeClient") as Sequelize).models
+                            .files,
+                        as: "image",
+                        attributes: ["url"],
+                    },
+                ],
+            },
+            {
+                model: sequelize.models.users,
+                attributes: ['id', 'name', 'email', 'username', 'image_id'],
+                as: "creator",
+                include: [
+                    {
+                        model: (this.app.get("sequelizeClient") as Sequelize).models
+                            .files,
+                        as: "image",
+                        attributes: ["url"],
+                    },
+                ],
+            },
+            {
+                model: sequelize.models.messages,
+                attributes: ['id', 'text', 'send_at', 'sender_id', 'conversation_id'],
+                as: "lastMessage",
+                order: [['send_at', 'DESC']],
+                limit: 1
+            }
+        ]
     });
 
     return {
@@ -54,6 +63,6 @@ export class Conversations extends Service {
         skip: 0,
         data: result.rows
     };
-  }
+}
 
 }

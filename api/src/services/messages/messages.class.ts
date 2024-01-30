@@ -9,6 +9,6 @@ export class Messages extends Service {
   }
 
   async create(data: Partial<any> | Partial<any>[], params?: Params): Promise<any> {
-      return await this._create({...data, sender_id: params?.user?.id}, params);
+      return await this._create({...data, sender_id: params?.user?.id, send_at: new Date}, params);
   }
 }

@@ -38,16 +38,18 @@ const ChatPage = () => {
         if (dateObj) {
             setSelectedConv(dateObj);
             setModalSelectUser(false);
+            getConvList();
+            getListOfMessage(dateObj)
         } else {
             await createNewConv(receiver_id);
             setModalSelectUser(false);
+            getConvList();
         }
-        getConvList();
     };
 
     const getConvList = async () => {
         const res = await getAllConversation(userData.id);
-
+        console.log("conv list", res);
         setConvList(res);
     }
 
@@ -118,9 +120,9 @@ const ChatPage = () => {
                         {selectedConv && <div className="w-full h-full flex flew-row items-center cursor-pointer hover:bg-[#171717]" onClick={() => Router.push("/user/" + `${selectedConv?.receiver_id !== userData?.id ? selectedConv?.receiver_id : selectedConv?.creator_id}`)}>
                             <div className="ml-0 lg:ml-4 w-[30px] h-[30px] flex justify-center items-center">
                                 {selectedConv?.receiver_id === userData.id ?
-                                    <ProfilPic url_photo={selectedConv?.creator.image?.url ? { url: s3uri + selectedConv?.creator.image.url } : ""} />
+                                    <ProfilPic url_photo={selectedConv?.creator?.image?.url ? { url: s3uri + selectedConv?.creator?.image?.url } : ""} />
                                     :
-                                    <ProfilPic url_photo={selectedConv?.receiver.image?.url ? { url: s3uri + selectedConv?.receiver.image.url } : ""} />
+                                    <ProfilPic url_photo={selectedConv?.receiver?.image?.url ? { url: s3uri + selectedConv?.receiver?.image?.url } : ""} />
                                 }
                             </div>
                             <div className="w-full ml-3 flex justify-between items-center h-[50px]">
@@ -161,7 +163,7 @@ const ChatPage = () => {
                     </div>
                     {selectedConv ? <div className="w-full h-full lg:w-[calc(100%-250px)] flex flex-col relative bg-[#121212]">
                         <div className="w-full h-[calc(100%-60px)] overflow-y-scroll pb-6">
-                            {messageList?.map((element: Message, index: number) =>
+                            {messageList ? messageList?.map((element: Message, index: number) =>
                                 <div key={index}>
                                     <div className={`w-full text-[#303030] flex ${element.sender_id === userData.id ? "justify-end" : "justify-start"}`}>
                                         <div className={`
@@ -189,7 +191,28 @@ const ChatPage = () => {
                                         </div>
                                     </div>
                                 </div>
-                            )}
+                            ) : <div className="text-[white] w-full h-full flex justify-center items-center">
+                                <svg
+                                    className="animate-spin h-6 w-6 text-white"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <circle
+                                        className="opacity-25 text-white"
+                                        cx="12"
+                                        cy="12"
+                                        r="10"
+                                        stroke="currentColor"
+                                        strokeWidth="4"
+                                    ></circle>
+                                    <path
+                                        className="opacity-75"
+                                        fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                    ></path>
+                                </svg>
+                            </div>}
                             <div ref={messagesEndRef} />
                         </div>
                         <form

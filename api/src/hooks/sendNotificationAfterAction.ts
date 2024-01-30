@@ -41,6 +41,15 @@ module.exports = (type: string) => {
           publication_id: null,
         });
       }
+      if (type === "MESSAGE") {
+        await context.app.service("notifications").create({
+          type: "MESSAGE",
+          text: result.text,
+          associate_user_id: result.sender_id,
+          receiver_id: user?.id,
+          send_at: result.send_at,
+        });
+      }
     } catch (e) {
       console.log("error", e);
     }

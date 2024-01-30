@@ -16,7 +16,7 @@ export default function (app: Application): typeof Model {
         primaryKey: true,
       },
       type: {
-        type: DataTypes.ENUM("COMMENT", "LIKE", "FOLLOW"),
+        type: DataTypes.ENUM("COMMENT", "LIKE", "FOLLOW", "MESSAGE"),
         allowNull: false,
       },
       text: {

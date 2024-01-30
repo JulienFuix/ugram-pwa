@@ -253,6 +253,7 @@ export const UserWrapper = ({ children }: UserWrapperInterface) => {
           if (element?.viewed === false) {
             cpt++;
             notifs.push(element);
+            console.log("element notif", element);
           }
       });
       setNotifications(notifs.reverse());
@@ -295,6 +296,10 @@ export const UserWrapper = ({ children }: UserWrapperInterface) => {
       findAllNotifications();
     }
   }, []);
+
+  useEffect(() => {
+    console.log("notifications", notifications);
+  }, [nbNotifs])
 
   const autoLogin = async () => {
     try {

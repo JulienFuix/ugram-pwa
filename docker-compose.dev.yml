@@ -1,56 +1,56 @@
 version: '3'
 
 services:
-  # api:
-  #   image: ghcr.io/julienfuix/ugram-pwa/ugram_api_dev:latest
-  #   build:
-  #     context: ${API_PATH}
-  #     target: dev
-  #   ports:
-  #     - "3030:3030"
-  #   environment:
-  #     POSTGRES_HOST: "db"
-  #     DATABASE_URI: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DB}"
-  #   depends_on:
-  #     - db
-  #   restart: on-failure
-  #   volumes:
-  #     - ./api/src:/app/src
-  #     - ./api/config:/app/config
-  #     - ./api/test:/app/test
-  #     - ./api/public:/app/public
-  #   networks:
-  #     - conection-db
-  # db:
-  #   image: postgres:latest
-  #   ports:
-  #     - "${POSTGRES_PORT}:${POSTGRES_PORT}"
-  #   expose:
-  #     - ${POSTGRES_PORT}
-  #   environment:
-  #     - POSTGRES_USER=${POSTGRES_USER}
-  #     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-  #     - POSTGRES_DB=${POSTGRES_DB}
-  #   networks:
-  #     - conection-db
-  #   volumes:
-  #     - db-data:/var/lib/postgresql/data
-
-  client:
-    image: ghcr.io/julienfuix/ugram-pwa/ugram_web_dev:latest
+  api:
+    image: ghcr.io/julienfuix/ugram-pwa/ugram_api_dev:latest
     build:
-      context: ${WEB_PATH}
-      target: production
+      context: ${API_PATH}
+      target: dev
     ports:
-      - ${WEB_PORT}:${WEB_PORT}
+      - "3030:3030"
+    environment:
+      POSTGRES_HOST: "db"
+      DATABASE_URI: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DB}"
+    depends_on:
+      - db
     restart: on-failure
     volumes:
-      - ${WEB_PATH}/data:/app/data
-      - ${WEB_PATH}/pages:/app/pages
-      - ${WEB_PATH}/public:/app/public
-      - ${WEB_PATH}/src:/app/src
-      - ${WEB_PATH}/styles:/app/styles
-      - ${WEB_PATH}/.env:/app/.env
+      - ./api/src:/app/src
+      - ./api/config:/app/config
+      - ./api/test:/app/test
+      - ./api/public:/app/public
+    networks:
+      - conection-db
+  db:
+    image: postgres:latest
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    expose:
+      - ${POSTGRES_PORT}
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    networks:
+      - conection-db
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  # client:
+  #   image: ghcr.io/julienfuix/ugram-pwa/ugram_web_dev:latest
+  #   build:
+  #     context: ${WEB_PATH}
+  #     target: dev
+  #   ports:
+  #     - ${WEB_PORT}:${WEB_PORT}
+  #   restart: on-failure
+  #   volumes:
+  #     - ${WEB_PATH}/data:/app/data
+  #     - ${WEB_PATH}/pages:/app/pages
+  #     - ${WEB_PATH}/public:/app/public
+  #     - ${WEB_PATH}/src:/app/src
+  #     - ${WEB_PATH}/styles:/app/styles
+  #     - ${WEB_PATH}/.env:/app/.env
 
 networks:
   conection-db:

@@ -30,7 +30,7 @@ export const ChatWrapper = ({ children }: ChatWrapperInterface) => {
     const [unReadMessage, setUnReadMessage] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [messageList, setMessageList] = useState<Message[]>([]);
-
+    const router = useRouter();
 
     const getAllConversation = async (user_id: string) => {
         try {
@@ -85,8 +85,6 @@ export const ChatWrapper = ({ children }: ChatWrapperInterface) => {
     function addMessageToConv(message: Message) {
         if (message?.sender_id !== userData?.id) {
             setMessageList((prevMessages: Message[]) => {
-                const router = useRouter();
-
                 if (router.pathname !== "/chat") {
                     setUnReadMessage((nb: number) => nb + 1);
                     return prevMessages;

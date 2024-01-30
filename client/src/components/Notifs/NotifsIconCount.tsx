@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaRegBell } from "react-icons/fa";
 import ModalNotifs from "./ModalNotifs";
+import useEffect from 'react';
 
 export default function NotifsIconCount(props: { count: number }) {
   const [modalNotif, setModalNotif] = useState(false);

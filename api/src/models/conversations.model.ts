@@ -30,7 +30,7 @@ export default function (app: Application): typeof Model {
     // Define associations here
     conversations.belongsTo(models.users, { foreignKey: "creator_id", as: "creator" });
     conversations.belongsTo(models.users, { foreignKey: "receiver_id", as: "receiver" });
-
+    conversations.hasMany(models.messages, { foreignKey: "conversation_id", as: "lastMessage" });
     // See https://sequelize.org/master/manual/assocs.html
   };
 

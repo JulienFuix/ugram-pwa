@@ -13,7 +13,12 @@ export default function (app: Application): typeof Model {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      send_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
     },
+    
     {
       hooks: {
         beforeCount(options: any): HookReturn {
