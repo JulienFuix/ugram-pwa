@@ -29,12 +29,12 @@ export default function DisplayPost(props: { actualizePost: (state: boolean) => 
   }, [props]);
 
   return (
-    <div className="w-[300px] h-[382px] rounded-md p-2">
+    <div className="w-[300px] rounded-md p-2 mb-10">
       <img
         onClick={() => setDisplayModalePost(true)}
         src={props?.post?.image?.url}
         alt="..."
-        className="w-[300px] h-[300px] object-scale-down align-middle rounded-md border-none cursor-pointer"
+        className="w-[300px] object-scale-down align-middle rounded-md border-none cursor-pointer"
       />
       <div className="w-full h-[72px]">
         <UserLink user={user} post={props.post}/>

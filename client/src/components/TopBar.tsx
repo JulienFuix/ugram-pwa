@@ -10,7 +10,7 @@ import { useChat } from "../context/ChatContext";
 
 export default function TopBar(props: { setOpen: any; open: boolean }) {
   const router = useRouter();
-  const { nbNotifs } = useUser();
+  const { nbNotifs, nbNewMessage } = useUser();
   const { unReadMessage } = useChat();
   const [displaySearchBar, setDisplaySearchBar] = useState(false);
   const [modalNotif, setModalNotifs] = useState(false);
@@ -63,13 +63,13 @@ export default function TopBar(props: { setOpen: any; open: boolean }) {
         </div>
         <div className="flex flex-row w-32 justify-around">
           <div className="w-[30px] h-[70px] flex justify-center items-center">
-            <NotifsIconCount count={nbNotifs} />
+            <NotifsIconCount />
           </div>
           <div className="w-[30px] h-[70px] flex justify-center items-center relative">
             <FiSend className="cursor-pointer text-white" size={25} onClick={() => navigate("/chat")} />
-            {unReadMessage > 0 && (
+            {nbNewMessage > 0 && (
                 <div className="absolute bottom-2.5 left-4 px-1.5 py-0.5 bg-red-500 text-white rounded-full text-xs">
-                {unReadMessage}
+                {nbNewMessage}
             </div>
             )}
           </div>

@@ -33,7 +33,7 @@ const itemMotion = {
 
 const IndexPage = () => {
   const [post, setPost] = useState<AllPostObject | any>([]);
-  const { getFollowForUser, getFollowingForUser } = useUser();
+  const { getFollowForUser, getFollowingForUser, notifications } = useUser();
   const { getAllPublication } = usePublication();
   const [follower, setFollower] = useState(0);
   const [following, setFollowing] = useState(0);
@@ -65,6 +65,7 @@ const IndexPage = () => {
     try {
       let res = await getAllPublication();
       if (res?.data) {
+        console.log("new data", res);
         setPost(res);
       }
     } catch (e: any) {
@@ -85,6 +86,11 @@ const IndexPage = () => {
     if (isAuthenticated != false)
       getAllPublicationFromAll();
   }, []);
+
+  useEffect(() => {
+    console.log("NEW NOTIF", notifications);
+    getAllPublicationFromAll();
+  }, [notifications]);
 
   return (
     <Layout>

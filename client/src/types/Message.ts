@@ -5,5 +5,6 @@ export type Message = {
     updatedAt: Date,
     sender_id: string,
     text: string,
+    send_at: string,
 };
   

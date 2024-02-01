@@ -17,6 +17,10 @@ export default function (app: Application): typeof Model {
         type: DataTypes.DATE,
         allowNull: false,
       },
+      receiver_id: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
     },
     
     {

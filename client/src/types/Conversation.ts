@@ -1,4 +1,5 @@
 import { User } from "./User";
+import { Message } from "./Message";
 
 export type Conversation = {
     id: string,
@@ -8,5 +9,6 @@ export type Conversation = {
     updatedAt: Date,
     receiver: User,
     creator: User,
+    lastMessage: Array<Message>
 };
   

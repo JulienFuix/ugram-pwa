@@ -1,8 +1,10 @@
 import axios from "axios";
-import React, { createContext, useContext, useState } from "react";
-import { HTTPRequest } from "../api/feathers-config";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import app, { HTTPRequest } from "../api/feathers-config";
 import { AllPostObject } from "../types/AllPostObject";
 import { Post } from "../types/Post";
+import { Comment } from "../types/Comment";
+
 const url = process.env.NEXT_PUBLIC_API_URL;
 
 interface PublicationWrapperInterface {
@@ -23,6 +25,7 @@ interface PublicationContextInterface {
   getComments: (id: string) => any;
   removeComment: (id: string) => any;
   getLikesPublication: (id: string) => any;
+  AllComments: Array<Comment>;
 }
 
 const PublicationContext = createContext({} as PublicationContextInterface);
@@ -32,6 +35,7 @@ export const PublicationWrapper = ({
 }: PublicationWrapperInterface) => {
   const [isLoading, setIsLoading] = useState(false);
   const [post, setAllPost] = useState<AllPostObject | any>();
+  const [AllComments, setAllComments] = useState<Array<Comment> | any>([]);
 
   const createPublications = async (
     description: string,
@@ -208,6 +212,8 @@ export const PublicationWrapper = ({
         },
       });
       setIsLoading(false);
+      setAllComments(res);
+      console.log("COMMENT", res);
       return res;
     } catch (e: any) {
       console.log("error", e);
@@ -228,6 +234,14 @@ export const PublicationWrapper = ({
     }
   };
 
+  function getAllComments(comments: any) {
+    getComments(comments.publication_id);
+  }
+
+  useEffect(() => {
+    app.service('comments').on('created', (comments: any) => getAllComments(comments));
+  }, []);
+
   return (
     <PublicationContext.Provider
       value={{
@@ -244,6 +258,7 @@ export const PublicationWrapper = ({
         getComments,
         removeComment,
         getLikesPublication,
+        AllComments,
       }}
     >
       {children}

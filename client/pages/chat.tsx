@@ -4,7 +4,7 @@ import { useChat } from "../src/context/ChatContext";
 import { useUser } from "../src/context/UserContext";
 import Protected from "../src/hoc/Protected";
 import { AllConversation } from "../src/types/AllConversation";
-import { Conversation } from "../src/types/Conversation";
+import { Conversation } from '../src/types/Conversation';
 import { FiEdit, FiSend, FiArrowLeft, FiInfo } from "react-icons/fi";
 import ModaleUser from "../src/components/Chat/ModaleUser";
 import ProfilPic from "../src/components/Profils/ProfilPic";
@@ -16,7 +16,7 @@ import { HTTPRequest } from "../src/api/feathers-config";
 const s3uri = "https://ufood-dev.s3.amazonaws.com/";
 
 const ChatPage = () => {
-    const { userData } = useUser();
+    const { userData, newMessageList, patchNotifications } = useUser();
     const { getAllConversation, createConversation, sendMessage, setUnReadMessage, unReadMessage, setMessageList, messageList } = useChat();
     const [convList, setConvList] = useState<AllConversation | any>([]);
     const [modalSelectUser, setModalSelectUser] = useState(false);
@@ -49,8 +49,27 @@ const ChatPage = () => {
 
     const getConvList = async () => {
         const res = await getAllConversation(userData.id);
-        console.log("conv list", res);
-        setConvList(res);
+
+        // Sort conv list by last message
+        if (res.data.length > 1) {
+            const sortedList = [...res.data].sort((a: Conversation, b: Conversation) => {
+                const lastMessageA = a.lastMessage[0];
+                const lastMessageB = b.lastMessage[0];
+                if (lastMessageA && lastMessageB) {
+                    return new Date(lastMessageB.send_at).getTime() - new Date(lastMessageA.send_at).getTime();
+                } else if (lastMessageA) {
+                    return -1;
+                } else if (lastMessageB) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }); // reverse the sorted list
+            const listSorted = { total: res.data.length, ...convList, data: sortedList }
+            setConvList(listSorted);
+        } else {
+            setConvList(res);
+        }
     }
 
     const handleMessageChange = (event: any) => {
@@ -58,10 +77,19 @@ const ChatPage = () => {
     }
 
     const sendMessageToUser = async () => {
+        let message_receiver_id = "";
+
         if (selectedConv) {
+            if (userData?.id === selectedConv?.receiver_id) {
+                message_receiver_id = selectedConv?.creator?.id;
+            } else {
+                message_receiver_id = selectedConv?.receiver?.id;
+            }
+
             if (message !== "") {
-                sendMessage(selectedConv?.id!, message);
+                sendMessage(message_receiver_id, selectedConv?.id!, message);
                 setMessage("");
+                getListOfMessage(selectedConv);
             }
         }
     }
@@ -69,7 +97,6 @@ const ChatPage = () => {
     const getListOfMessage = async (conv: Conversation) => {
         const pageNumber = 1;
         const pageSize = 1000;
-        console.log("id", conv.id);
 
         const res = await HTTPRequest('find', 'messages', {
             query: {
@@ -91,6 +118,52 @@ const ChatPage = () => {
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
+
+    const convertTimeToParis = (date_str: string) => {
+        const current_date = new Date();
+        const date = new Date(date_str);
+
+        const options: Intl.DateTimeFormatOptions = {
+            timeZone: 'Europe/Paris',
+            hour: '2-digit',
+            minute: '2-digit',
+        };
+        const parisTime = date.toLocaleString('fr-FR', options);
+
+        if (date.toDateString() === current_date.toDateString()) {
+            return parisTime;
+        } else {
+            const dayOfWeek = date.toLocaleString('fr-FR', { weekday: 'short' });
+            const dayOfMonth = date.getDate();
+            const abbreviatedDayOfWeek = dayOfWeek.slice(0, 3);
+            return `${abbreviatedDayOfWeek} ${dayOfMonth}`;
+        }
+    }
+
+    function patchNotificationsList(conversation_id: string) {
+        const notifications = newMessageList.filter((message) => message.conversation_id === conversation_id);
+        notifications.forEach((notification) => {
+            patchNotifications(notification.id);
+        });
+    }
+
+    function showingLastMessage(conversation: Conversation) {
+        let prefix = "";
+        const newMessage = newMessageList.find((message) => message.conversation_id === conversation.lastMessage[0]?.conversation_id)?.text;
+
+        console.log("new message", conversation.lastMessage[0], localStorage.getItem("user_id"));
+        if (conversation.lastMessage[0]?.sender_id === localStorage.getItem("user_id")) {
+            prefix = "You: ";
+        } else {
+            prefix = "";
+        }
+
+        if (newMessage) {
+            return prefix + newMessage;
+        } else {
+            return prefix + conversation.lastMessage[0]?.text;
+        }
+    }
 
     useEffect(() => {
         scrollToBottom();
@@ -114,7 +187,7 @@ const ChatPage = () => {
                         </div>
                     </div>
                     <div className={`${selectedConv ? "w-full" : "hidden"} lg:w-[calc(100%-250px)] flex h-full border-b-[1px] border-[#202020] flex-row`}>
-                        <div className="w-[70px] h-[70px] flex lg:hidden justify-center items-center text-white cursor-pointer" onClick={() => { setSelectedConv(undefined); setMessageList(undefined) }}>
+                        <div className="w-[70px] h-[70px] flex lg:hidden justify-center items-center text-white cursor-pointer" onClick={() => { setSelectedConv(undefined); setMessageList(undefined); getConvList() }}>
                             <FiArrowLeft size={25} />
                         </div>
                         {selectedConv && <div className="w-full h-full flex flew-row items-center cursor-pointer hover:bg-[#171717]" onClick={() => Router.push("/user/" + `${selectedConv?.receiver_id !== userData?.id ? selectedConv?.receiver_id : selectedConv?.creator_id}`)}>
@@ -141,21 +214,27 @@ const ChatPage = () => {
                 <div className="h-[calc(100vh-140px)] flex flex-row">
                     <div className="hidden lg:block w-[250px] h-full overflow-y-scroll border-r-[1px] border-[#202020]">
                         {convList?.total > 0 && convList?.data?.map((element: Conversation, index: string) =>
-                            <div key={index}>
-                                <div className="flex h-[70px] flex-row cursor-pointer items-center pl-3 hover:bg-[#171717]" onClick={() => changeSelectedConv(element)}>
+                            <div className="w-full" key={index}>
+                                <div className="w-full flex h-[70px] flex-row cursor-pointer items-center pl-3 hover:bg-[#171717]" onClick={() => changeSelectedConv(element)}>
                                     <div className="w-[50px] h-[50px] flex justify-center items-center">
-                                        {element.receiver_id === userData.id ?
+                                        {element.receiver_id === userData?.id ?
                                             <ProfilPic url_photo={element.creator.image?.url ? { url: s3uri + element.creator.image.url } : ""} />
                                             :
                                             <ProfilPic url_photo={element.receiver.image?.url ? { url: s3uri + element.receiver.image.url } : ""} />
                                         }
                                     </div>
-                                    <div className="ml-3 flex justify-start items-center h-[50px]">
+                                    <div className="ml-3 flex justify-center items-start flex-col w-[140px] h-[50px]">
                                         {element.receiver_id === userData.id ?
-                                            <p className="text-white">{element.creator?.username}</p>
+                                            <p className={`text-white ${newMessageList.find((message) => message.conversation_id === element.lastMessage[0]?.conversation_id) ? "font-bold" : ""}`}>{element.creator?.username}</p>
                                             :
-                                            <p className="text-white">{element.receiver?.username}</p>
+                                            <p className={`text-white ${newMessageList.find((message) => message.conversation_id === element.lastMessage[0]?.conversation_id) ? "font-bold" : ""}`}>{element.receiver?.username}</p>
                                         }
+                                        <p className={`text-slate-400 text-xs ${newMessageList.find((message) => message.conversation_id === element.lastMessage[0]?.conversation_id) ? "font-bold text-white" : ""}`}>
+                                            {showingLastMessage(element)}
+                                        </p>
+                                    </div>
+                                    <div className="w-[60px] h-[50px] flex justify-start items-center">
+                                        <p className="text-slate-400 text-xs">{convertTimeToParis(element.lastMessage[0]?.send_at)}</p>
                                     </div>
                                 </div>
                             </div>
@@ -246,21 +325,29 @@ const ChatPage = () => {
                             </div>
                             <div className="flex lg:hidden w-full h-full flex-col">
                                 {convList?.total > 0 && convList?.data?.map((element: Conversation, index: string) =>
-                                    <div key={index}>
+                                    <div key={index} onClick={() => patchNotificationsList(element.lastMessage[0]?.conversation_id)}>
                                         <div className="flex h-[70px] flex-row cursor-pointer items-center pl-3 hover:bg-[#171717]" onClick={() => changeSelectedConv(element)}>
-                                            <div className="w-[50px] h-[50px] flex justify-center items-center">
-                                                {element.receiver_id === userData.id ?
-                                                    <ProfilPic url_photo={element.creator.image?.url ? { url: s3uri + element.creator.image.url } : ""} />
-                                                    :
-                                                    <ProfilPic url_photo={element.receiver.image?.url ? { url: s3uri + element.receiver.image.url } : ""} />
-                                                }
+                                            <div className="w-[calc(100%-50px)] flex flew-row items-center">
+                                                <div className="w-[50px] h-[50px] flex justify-center items-center">
+                                                    {element.receiver_id === userData.id ?
+                                                        <ProfilPic url_photo={element.creator.image?.url ? { url: s3uri + element.creator.image.url } : ""} />
+                                                        :
+                                                        <ProfilPic url_photo={element.receiver.image?.url ? { url: s3uri + element.receiver.image.url } : ""} />
+                                                    }
+                                                </div>
+                                                <div className="ml-3 flex justify-center items-start flex-col h-[50px]">
+                                                    {element.receiver_id === userData.id ?
+                                                        <p className={`text-white ${newMessageList.find((message) => message.conversation_id === element.lastMessage[0]?.conversation_id) ? "font-bold" : ""}`}>{element.creator?.username}</p>
+                                                        :
+                                                        <p className={`text-white ${newMessageList.find((message) => message.conversation_id === element.lastMessage[0]?.conversation_id) ? "font-bold" : ""}`}>{element.receiver?.username}</p>
+                                                    }
+                                                    <p className={`text-slate-400 text-xs ${newMessageList.find((message) => message.conversation_id === element.lastMessage[0]?.conversation_id) ? "font-bold text-white" : ""}`}>
+                                                        {showingLastMessage(element)}
+                                                    </p>
+                                                </div>
                                             </div>
-                                            <div className="ml-3 flex justify-start items-center h-[50px]">
-                                                {element.receiver_id === userData.id ?
-                                                    <p className="text-white">{element.creator?.username}</p>
-                                                    :
-                                                    <p className="text-white">{element.receiver?.username}</p>
-                                                }
+                                            <div className="w-[60px] h-[50px] flex justify-start items-center">
+                                                <p className="text-slate-400 text-xs">{convertTimeToParis(element.lastMessage[0]?.send_at)}</p>
                                             </div>
                                         </div>
                                     </div>

@@ -34,6 +34,27 @@ export default function NotifsUserFollow(props: {
     }
   };
 
+    const convertTimeToParis = (date_str: string) => {
+        const current_date = new Date();
+        const date = new Date(date_str);
+
+        const options: Intl.DateTimeFormatOptions = {
+            timeZone: 'Europe/Paris',
+            hour: '2-digit',
+            minute: '2-digit',
+        };
+        const parisTime = date.toLocaleString('fr-FR', options);
+
+        if (date.toDateString() === current_date.toDateString()) {
+            return parisTime;
+        } else {
+            const dayOfWeek = date.toLocaleString('fr-FR', { weekday: 'short' });
+            const dayOfMonth = date.getDate();
+            const abbreviatedDayOfWeek = dayOfWeek.slice(0, 3);
+            return `${abbreviatedDayOfWeek} ${dayOfMonth}`;
+        }
+    }
+
   useEffect(() => {
     if (props?.notification?.associate_user_id)
       GetUserById(props?.notification?.associate_user_id);
@@ -41,23 +62,28 @@ export default function NotifsUserFollow(props: {
 
   return (
     <div
-      className="flex flex-row justify-between m-5 items-center content-center cursor-pointer"
-      onClick={() => {
-        NotifsRead(props?.notification?.id), props?.closeModal();
-        Router.push("/user/" + `${props?.notification?.associate_user_id}`);
-      }}
+        className="flex flex-row justify-between my-5 items-center"
+        onClick={() => {
+            Router.push("/user/" + `${props?.notification?.associate_user_id}`);
+        }}
     >
-      <div className="flex flex-row justify-between items-center content-center">
-        <div className="h-12 w-12 align-middle border-none">
-          <ProfilPic url_photo={image} />
+        <div className="flex flex-row justify-between items-center w-full">
+            <div
+                className="h-[50px] w-[50px] border-none cursor-pointer"
+            >
+                <ProfilPic url_photo={image} />
+            </div>
+            <div
+                className="h-[50px] w-full flex flex-row cursor-pointer"
+            >
+                <div className="text-white px-6 w-full">
+                    <div className="flex flex-col">
+                        <span className="font-bold">{user?.username}</span>
+                        <span className="flex flex-row text-sm justify-between"><span className="line-clamp-1">Follow you</span><span className="text-sm text-gray-400">{convertTimeToParis(props?.notification?.updatedAt.toString())}</span></span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div className="flex flex-col">
-          <p className="text-[#9c9c9c] pl-4">
-            {user?.username}
-            {" follow you"}
-          </p>
-        </div>
-      </div>
     </div>
   );
 }

@@ -44,7 +44,7 @@ export default function LikePost(props: { post: any }) {
       >
         <AiOutlineHeart
           className={`${like ? "text-red-500" : "text-white"} mr-1`}
-          size={22}
+          size={18}
         />
       </button>
       <p className="text-white hover:underline hover:cursor-pointer" onClick={() => setDisplayModaleLike(true)}>{nblike}</p>

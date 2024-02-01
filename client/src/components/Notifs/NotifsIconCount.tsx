@@ -1,14 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaRegBell } from "react-icons/fa";
 import ModalNotifs from "./ModalNotifs";
-import useEffect from 'react';
+import { useUser } from "../../context/UserContext";
 
-export default function NotifsIconCount(props: { count: number }) {
+export default function NotifsIconCount() {
   const [modalNotif, setModalNotif] = useState(false);
+  const { notifications } = useUser();
+  const [nbUnReadNotifs, setNbUnReadNotifs] = useState(0);
 
   const closeModal = async () => {
     setModalNotif(false);
   };
+
+    function setNbUnReadNotifsFunc() {
+        let count = 0;
+        notifications?.map((notif) => {
+        if (notif?.viewed === false) {
+            count++;
+        }
+        });
+        setNbUnReadNotifs(count);
+    }
+
+    useEffect(() => {
+            setNbUnReadNotifsFunc();
+    }, []);
+
+    useEffect(() => {
+        setNbUnReadNotifsFunc();
+    }, [notifications]);
 
   return (
     <div className="relative inline-block">
@@ -17,9 +37,9 @@ export default function NotifsIconCount(props: { count: number }) {
         size={25}
         onClick={() => setModalNotif(true)}
       />
-      {props?.count > 0 && (
+      {nbUnReadNotifs > 0 && (
         <div className="absolute bottom-2.5 left-4 px-1.5 py-0.5 bg-red-500 text-white rounded-full text-xs">
-          {props?.count}
+          {nbUnReadNotifs}
         </div>
       )}
       <ModalNotifs

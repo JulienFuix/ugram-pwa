@@ -11,87 +11,95 @@ import { Post } from "../../types/Post";
 import { usePublication } from "../../context/PublicationContext";
 
 export default function NotifsUserLike(props: {
-  notification: Notifications;
-  closeModal: () => any;
+    notification: Notifications;
+    closeModal: () => any;
 }) {
-  const { FindUserById, patchNotifications } = useUser();
-  const [image, setImage] = useState("");
-  const [user, setUser] = useState<User>();
-  const [post, setPost] = useState<Post>();
-  const { getPostsById } = usePublication();
+    const { FindUserById, patchNotifications } = useUser();
+    const [image, setImage] = useState("");
+    const [user, setUser] = useState<User>();
+    const [post, setPost] = useState<Post>();
+    const { getPostsById } = usePublication();
 
-  const GetUserById = async (id: string) => {
-    try {
-      let res = await FindUserById(id);
-      setImage(res?.image);
-      setUser(res);
-    } catch (e: any) {
-      console.log("error", e);
+    const GetUserById = async (id: string) => {
+        try {
+            let res = await FindUserById(id);
+            setImage(res?.image);
+            setUser(res);
+        } catch (e: any) {
+            console.log("error", e);
+        }
+    };
+
+    const getPostById = async (id: string) => {
+        try {
+            let res = await getPostsById(id);
+            if (res) {
+                setPost(res);
+            }
+        } catch (e: any) {
+            console.log("error", e);
+        }
+    };
+
+    const convertTimeToParis = (date_str: string) => {
+        const current_date = new Date();
+        const date = new Date(date_str);
+
+        const options: Intl.DateTimeFormatOptions = {
+            timeZone: 'Europe/Paris',
+            hour: '2-digit',
+            minute: '2-digit',
+        };
+        const parisTime = date.toLocaleString('fr-FR', options);
+
+        if (date.toDateString() === current_date.toDateString()) {
+            return parisTime;
+        } else {
+            const dayOfWeek = date.toLocaleString('fr-FR', { weekday: 'short' });
+            const dayOfMonth = date.getDate();
+            const abbreviatedDayOfWeek = dayOfWeek.slice(0, 3);
+            return `${abbreviatedDayOfWeek} ${dayOfMonth}`;
+        }
     }
-  };
 
-  const getPostById = async (id: string) => {
-    try {
-      let res = await getPostsById(id);
-      if (res) {
-        setPost(res);
-      }
-    } catch (e: any) {
-      console.log("error", e);
-    }
-  };
+    useEffect(() => {
+        if (props?.notification?.associate_user_id)
+            GetUserById(props?.notification?.associate_user_id);
+        if (props?.notification?.publication_id)
+            getPostById(props?.notification?.publication_id);
+    }, [props?.notification]);
 
-  const NotifsRead = async (id: string) => {
-    try {
-      let res = await patchNotifications(id);
-    } catch (e: any) {
-      console.log("error", e);
-    }
-  };
-
-  useEffect(() => {
-    if (props?.notification?.associate_user_id)
-      GetUserById(props?.notification?.associate_user_id);
-    if (props?.notification?.publication_id)
-      getPostById(props?.notification?.publication_id);
-  }, [props?.notification]);
-
-  return (
-    <div
-      className="flex flex-row justify-between m-5 items-center"
-      onClick={() => {
-        NotifsRead(props?.notification?.id), props?.closeModal();
-      }}
-    >
-      <div className="flex flex-row justify-between items-center content-center">
+    return (
         <div
-          className="h-12 w-12 align-middle border-none cursor-pointer"
-          onClick={() => {
-            Router.push("/user/" + `${props?.notification?.associate_user_id}`);
-          }}
+            className="flex flex-row justify-between my-5 items-center"
         >
-          <ProfilPic url_photo={image} />
+            <div className="flex flex-row justify-between items-center w-full">
+                <div
+                    className="h-[50px] w-[50px] border-none cursor-pointer"
+                    onClick={() => {
+                        Router.push("/user/" + `${props?.notification?.associate_user_id}`);
+                    }}
+                >
+                    <ProfilPic url_photo={image} />
+                </div>
+                <div
+                    className="h-[50px] w-full flex flex-row cursor-pointer"
+                    onClick={() => {
+                        Router.push("/post/" + `${props?.notification?.publication_id}`);
+                    }}
+                >
+                    <div className="text-white px-6 w-full">
+                        <div className="flex flex-col">
+                            <span className="font-bold">{user?.username}</span>
+                            <span className="flex flex-row text-sm justify-between"><span className="line-clamp-1">Like your post</span><span className="text-sm text-gray-400">{convertTimeToParis(props?.notification?.updatedAt.toString())}</span></span>
+                        </div>
+                    </div>
+                    <img
+                        src={post?.image?.url}
+                        className="w-[50px] h-[50px] align-middle rounded-md border-none cursor-pointer"
+                    />
+                </div>
+            </div>
         </div>
-        <div
-          className="flex cursor-pointer flex-row justify-between m-5 items-center"
-          onClick={() => {
-            Router.push("/post/" + `${props?.notification?.publication_id}`);
-          }}
-        >
-          <div className="flex flex-col">
-            <p className="text-[#9c9c9c] pl-4">
-              {user?.username}
-              {" like your post"}
-            </p>
-          </div>
-          <div className="rounded-full m-h-6 m-w-4 align-middle border-none">
-            <img
-              src={post?.image?.url}
-              className="align-center object-cover max-h-16 max-w-16"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+    );
 }

@@ -86,7 +86,6 @@ export default function ModaleModifyProfil(props: ModaleProps) {
       files,
       tel
     );
-    location.reload();
     handleCloseClick();
   };
 
@@ -146,7 +145,7 @@ export default function ModaleModifyProfil(props: ModaleProps) {
               <input
                 id="user-input-username"
                 defaultValue={props?.user?.username}
-                className="w-[250px] lg:w-[250px] lg:w-[250px] h-[50px]  rounded-lg ml-5 mr-5 p-5 duration-300 "
+                className="w-[250px] lg:w-[250px] h-[50px]  rounded-lg ml-5 mr-5 p-5 duration-300 "
                 disabled={isDisabledUserName}
                 type="text"
                 placeholder="username"

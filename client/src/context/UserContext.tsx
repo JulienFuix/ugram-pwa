@@ -40,7 +40,9 @@ interface UserContextInterface {
   deleteAccount: (id: any) => any;
   findAllNotifications: () => AllNotifications | any;
   nbNotifs: number;
+  nbNewMessage: number;
   notifications: Array<Notifications>;
+  newMessageList: Array<Notifications>;
   patchNotifications: (id: string) => any;
 }
 
@@ -57,7 +59,9 @@ export const UserWrapper = ({ children }: UserWrapperInterface) => {
   const [nbFollowing, setNbFollowing] = useState(0);
   const [post, setAllPost] = useState<AllPostObject | any>();
   const [nbNotifs, setNbNotifs] = useState(0);
+  const [nbNewMessage, setNbNewMessage] = useState(0);
   const [notifications, setNotifications] = useState<Array<Notifications>>([]);
+  const [newMessageList, setNewMessageList] = useState<Array<Notifications>>([]);
 
   const FindUserById = async (id: string) => {
     try {
@@ -222,6 +226,7 @@ export const UserWrapper = ({ children }: UserWrapperInterface) => {
         url: `${url}/users/${id}`,
         data: formdata,
       };
+      console.log("config", config);
 
       axios(config).then(function (response) {
         setUserData(response.data);
@@ -243,26 +248,37 @@ export const UserWrapper = ({ children }: UserWrapperInterface) => {
     FindAllPostById(user?.id);
   };
 
-  const findAllNotifications = async () => {
+const findAllNotifications = async () => {
     try {
-      let res = await HTTPRequest("find", "notifications");
-      let cpt = 0;
-      let notifs: Array<Notifications> = [];
-      res?.data.forEach((element: Notifications) => {
-        if (element?.receiver_id === currentUser?.id)
-          if (element?.viewed === false) {
-            cpt++;
-            notifs.push(element);
-            console.log("element notif", element);
-          }
-      });
-      setNotifications(notifs.reverse());
-      setNbNotifs(cpt);
-      return res;
+        let res = await HTTPRequest("find", "notifications", {
+            query: {
+                $sort: { createdAt: 0 },
+                $limit: 100,
+            },
+        });
+        let cpt = 0;
+        let new_message_nb = 0;
+        let notifs: Array<Notifications> = [];
+        let new_messages: Array<Notifications> = [];
+        res?.data.forEach((element: Notifications) => {
+            if (element?.receiver_id === localStorage.getItem("user_id")) {
+                if (element?.type === "MESSAGE") {
+                    new_messages.push(element);
+                    new_message_nb++;
+                }
+                cpt++;
+                notifs.push(element);
+            }
+        });
+        setNotifications(notifs);
+        setNbNotifs(cpt);
+        setNewMessageList(new_messages);
+        setNbNewMessage(new_message_nb);
+        return res;
     } catch (e: any) {
-      console.log("error", e);
+        console.log("error", e);
     }
-  };
+};
 
   const patchNotifications = async (id: string) => {
     try {
@@ -298,6 +314,7 @@ export const UserWrapper = ({ children }: UserWrapperInterface) => {
   }, []);
 
   useEffect(() => {
+    console.log("MY ID", localStorage.getItem("user_id"));
     console.log("notifications", notifications);
   }, [nbNotifs])
 
@@ -308,12 +325,22 @@ export const UserWrapper = ({ children }: UserWrapperInterface) => {
       axios.defaults.headers.common["Authorization"] =
         "Bearer " + res.accessToken;
       setCurrentUser(res?.user);
+      localStorage.setItem("user_id", res?.user?.id);
       setIsLoadingAuth(false);
       await GetGoodInfoUser(res?.user);
     } catch (e: any) {
       setIsLoadingAuth(false);
     }
   };
+
+  function getAllNotifications(notifications: any) {
+    console.log("new notif", notifications);
+    findAllNotifications();
+  }
+
+  useEffect(() => {
+    app.service('notifications').on('created', (notifications: any) => getAllNotifications(notifications))
+  }, [])
 
   return (
     <UserContext.Provider
@@ -337,6 +364,8 @@ export const UserWrapper = ({ children }: UserWrapperInterface) => {
         nbNotifs,
         notifications,
         patchNotifications,
+        nbNewMessage,
+        newMessageList
       }}
     >
       {children}

@@ -6,6 +6,8 @@ export type Notifications = {
     createdAt: Date;
     updatedAt: Date;
     receiver_id: string,
+    sender_id: string,
     associate_user_id: string,
     publication_id: string,
+    conversation_id: string,
 };

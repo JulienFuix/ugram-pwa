@@ -46,8 +46,10 @@ module.exports = (type: string) => {
           type: "MESSAGE",
           text: result.text,
           associate_user_id: result.sender_id,
-          receiver_id: user?.id,
+          receiver_id: result.receiver_id,
           send_at: result.send_at,
+          conversation_id: result.conversation_id,
+          publication_id: null,
         });
       }
     } catch (e) {

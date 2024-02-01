@@ -21,7 +21,7 @@ export default function ModaleLike(props: ModaleProps) {
   const { getLikesPublication } = usePublication();
   const [displayModaleLike, setDisplayModaleLike] = useState(false);
   const [allLikes, setallLikes] = useState<Likes[]>([]);
-  const { userData } = useUser();
+  const { userData, notifications } = useUser();
 
   const handleCloseClick = () => {
     props.changeDisplay(false);
@@ -34,6 +34,14 @@ export default function ModaleLike(props: ModaleProps) {
     }
     getLikes();
   }, []);
+
+  useEffect(() => {
+    const getLikes = async () => {
+        const res = await getLikesPublication(props?.postData?.id);
+        setallLikes(res.data);
+      }
+      getLikes();
+  }, [notifications])
 
   return (
     <div className="custom-modale-background w-screen h-screen fixed z-50 top-0 left-0 flex justify-center items-center">

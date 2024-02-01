@@ -133,7 +133,7 @@ export default function PostsPage() {
               )}
               <div className="w-full">
                 <div className="scrollbar-hide w-full h-[250px] overflow-y-scroll">
-                  {allComments.map((comment, index) => (
+                  {allComments?.map((comment, index) => (
                     <div key={index}>
                       <div className="scrollbar-hide w-full min-h-[75px] max-h-[150px] mt-2 flex">
                         <div className="scrollbar-hide h-auto min-w-[150px] max-w-[200px] overflow-x-scroll flex justify-evenly items-center">

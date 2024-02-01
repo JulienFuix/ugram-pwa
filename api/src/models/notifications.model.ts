@@ -28,6 +28,11 @@ export default function (app: Application): typeof Model {
         allowNull: false,
         defaultValue: false,
       },
+      conversation_id: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: false,
+      },
     },
     {
       hooks: {
@@ -46,7 +51,6 @@ export default function (app: Application): typeof Model {
     notifications.belongsTo(models.publications, {
       foreignKey: { name: "publication_id", allowNull: true },
     });
-
     // See https://sequelize.org/master/manual/assocs.html
   };
 

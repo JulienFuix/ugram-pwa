@@ -10,7 +10,7 @@ export default function CommentPost(props: { post: any }) {
 
   return (
     <div className="flex text-white flex-row align-center items-center justify-between max-w-fit">
-    <BsChat className="mr-1 text-white" size={20}/>
+    <BsChat className="mr-1 text-white" size={17}/>
     <p>{nbcomment}</p>
     </div>
   );

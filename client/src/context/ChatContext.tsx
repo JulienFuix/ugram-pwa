@@ -15,7 +15,7 @@ interface ChatWrapperInterface {
 interface ChatContextInterface {
     getAllConversation: (user_id: string) => any;
     createConversation: (receiver_id: string) => any;
-    sendMessage: (conversation_id: string, text: string) => any;
+    sendMessage: (receiver_id: string, conversation_id: string, text: string) => any;
     isLoading: boolean;
     unReadMessage: number;
     setUnReadMessage: React.Dispatch<React.SetStateAction<number>>;
@@ -64,16 +64,16 @@ export const ChatWrapper = ({ children }: ChatWrapperInterface) => {
         }
     }
 
-    const sendMessage = async (conversation_id: string, text: string) => {
+    const sendMessage = async (receiver_id: string, conversation_id: string, text: string) => {
         try {
             setIsLoading(true);
             const res = await HTTPRequest("create", "messages", {
                 data: {
+                    receiver_id: receiver_id,
                     conversation_id: conversation_id,
                     text: text,
                 },
             });
-            console.log("send message", res);
             setIsLoading(false);
         } catch (e: any) {
             setIsLoading(false);
@@ -83,7 +83,7 @@ export const ChatWrapper = ({ children }: ChatWrapperInterface) => {
     }
 
     function addMessageToConv(message: Message) {
-        if (message?.sender_id !== userData?.id) {
+        if (message?.sender_id !== localStorage.getItem("user_id")) {
             setMessageList((prevMessages: Message[]) => {
                 if (router.pathname !== "/chat") {
                     setUnReadMessage((nb: number) => nb + 1);
