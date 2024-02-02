@@ -1,26 +1,19 @@
 FROM node:18-alpine as ugram_laval
-
 WORKDIR /app
 EXPOSE ${WEB_PORT}
-COPY package.json package.json
+COPY . .
+RUN npm i
 
 # Docker Dev
 FROM ugram_laval as dev
-
-RUN corepack enable
-RUN printenv
-RUN npm i
 COPY . .
 CMD ["npm", "run", "dev"]
 
 
 # Docker Prod
-FROM ugram_laval as production
-
-RUN npm i --force
-# RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
-COPY . .
-
+FROM ugram_laval as builder
 RUN npx next build
 
+FROM builder as production
+COPY --from=builder /app/.next ./.next
 CMD ["npm", "run", "start"]
