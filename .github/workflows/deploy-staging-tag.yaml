@@ -6,7 +6,7 @@ name: CI/CD Pipeline - Staging Tag
 #       - '*'
 on:
   release:
-    types: [published]
+    types: [created]
 
 jobs:
   build-docker-image:
