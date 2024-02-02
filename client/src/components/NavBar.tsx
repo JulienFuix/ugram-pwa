@@ -38,10 +38,8 @@ export default function NavBar(props: { open: boolean }) {
             <div className="flex flex-col justify-between h-3/5">
               <div className="w-full px-2 flex flex-col space-y-2">
                 <motion.div
-                  className={`group w-full flex flex-row space-x-5 rounded-xl cursor-pointer hover:bg-[#7a797d] px-3 py-2 ${Router.pathname == "/" ? "text-white font-bold" : "text-white"
+                  className={`group w-full flex flex-row space-x-5 rounded-md cursor-pointer hover:bg-[#101010] px-3 py-2 ${Router.pathname == "/" ? "text-white font-bold" : "text-white"
                     }`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.99 }}
                   onClick={() => navigate("/")}
                 >
                   <FiHome size={25} />
@@ -60,36 +58,30 @@ export default function NavBar(props: { open: boolean }) {
                   <p className="font-roboto self-center">Explore</p>
                 </motion.div> */}
                 <motion.div
-                  className={`group w-full flex flex-row space-x-5 rounded-xl cursor-pointer hover:bg-[#7a797d] px-3 py-2 ${Router.pathname == "/publish"
+                  className={`group w-full flex flex-row space-x-5 rounded-md cursor-pointer hover:bg-[#101010] px-3 py-2 ${Router.pathname == "/publish"
                       ? "text-white font-bold"
                       : "text-white"
                     }`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.99 }}
                   onClick={() => navigate("/publish")}
                 >
                   <FiPlusSquare size={25} />
                   <p className="font-roboto self-center">Create</p>
                 </motion.div>
                 <motion.div
-                  className={`group w-full flex flex-row space-x-5 rounded-xl cursor-pointer hover:bg-[#7a797d] px-3 py-2 ${Router.pathname == "/settings"
+                  className={`group w-full flex flex-row space-x-5 rounded-md cursor-pointer hover:bg-[#101010] px-3 py-2 ${Router.pathname == "/settings"
                       ? "text-white font-bold"
                       : "text-white"
                     }`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.99 }}
                   onClick={() => navigate("/settings")}
                 >
                   <FiSettings size={25} />
                   <p className="font-roboto self-center">Settings</p>
                 </motion.div>
                 <motion.div
-                  className={`group w-full flex flex-row space-x-5 rounded-xl cursor-pointer hover:bg-[#7a797d] px-3 py-2 ${Router.pathname == "/userslist"
+                  className={`group w-full flex flex-row space-x-5 rounded-md cursor-pointer hover:bg-[#101010] px-3 py-2 ${Router.pathname == "/userslist"
                       ? "text-white font-bold"
                       : "text-white"
                     }`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.99 }}
                   onClick={() => navigate("/userslist")}
                 >
                   <FiUsers size={25} />
@@ -98,8 +90,8 @@ export default function NavBar(props: { open: boolean }) {
               </div>
             </div>
           </div>
-          <div className="flex justify-center py-3 border-t-2 border-t-[#545252] mt-10">
-            <div onClick={() => logOut()} className="group w-full flex flex-row space-x-5 rounded-xl cursor-pointer hover:bg-[#7a797d] px-3 py-2">
+          <div className="flex justify-center py-3 border-t-[1px] border-t-[#404040] mt-10">
+            <div onClick={() => logOut()} className="group w-full flex flex-row space-x-5 rounded-md cursor-pointer hover:bg-[#101010] px-3 py-2">
               <FiLogOut size={25} color="white" />
               <p className="font-roboto self-center text-white">Logout</p>
             </div>
