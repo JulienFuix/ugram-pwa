@@ -9,7 +9,7 @@
   },
   "authentication": {
     "entity": "user",
-	"origins": ["https://ugram.makefile.cloud/"],
+	"origins": ["https://ugram.online/"],
     "service": "users",
     "secret": "32ZyYB3QtPQpYQhlLgBSJBMiJGU=",
     "authStrategies": ["jwt", "local", "oauth"],
@@ -17,7 +17,7 @@
       "header": {
         "typ": "access"
       },
-      "audience": "https://ugram-api.makefile.cloud",
+      "audience": "https://api.ugram.online/",
       "issuer": "feathers",
       "algorithm": "HS256",
       "expiresIn": "1d"
@@ -31,8 +31,8 @@
 		"host": "ugram-api.makefile.cloud",
 		"protocol": "https"
 	  },
-	  "origins": ["https://ugram.makefile.cloud/"],
-      "redirect": "https://ugram.makefile.cloud/oauth",
+	  "origins": ["https://ugram.online/"],
+      "redirect": "https://ugram.online/oauth",
 	  "google": {
 		"key": "782431955324-2abpd2jkr5mhtu3k28u0hiq7fkk3rm1m.apps.googleusercontent.com",
 		"secret": "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",
