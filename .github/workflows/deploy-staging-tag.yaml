@@ -1,9 +1,12 @@
 name: CI/CD Pipeline - Staging Tag
 
+# on:
+#   push:
+#     tags:
+#       - '*'
 on:
-  push:
-    tags:
-      - '*'
+  release:
+    types: [published]
 
 jobs:
   build-docker-image:
