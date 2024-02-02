@@ -28,7 +28,7 @@
     },
 	"oauth": {
 	  "defaults": {
-		"host": "ugram-api.makefile.cloud",
+		"host": "api.ugram.online",
 		"protocol": "https"
 	  },
 	  "origins": ["https://ugram.online/"],

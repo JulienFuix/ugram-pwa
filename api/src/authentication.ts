@@ -4,7 +4,7 @@ import { expressOauth, OAuthProfile, OAuthStrategy } from '@feathersjs/authentic
 import { ServiceAddons } from '@feathersjs/feathers';
 import { Application } from './declarations';
 
-const front_url = "https://ugram.makefile.cloud/"; //prod
+const front_url = "https://api.ugram.online/"; //prod
 // const front_url = "http://localhost:3000/"; //dev
 
 declare module './declarations' {
