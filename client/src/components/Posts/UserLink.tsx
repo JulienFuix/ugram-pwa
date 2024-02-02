@@ -15,12 +15,12 @@ export default function UserLink(props: { user: User | any, post: Post }) {
             <p className="text-white ml-3 font-light">{props?.user?.username}</p>
         </div>
         <div className="flex flex-row w-[75px]">
-            <div>
+            {/* <div>
                 <LikePost post={props.post}/>
             </div>
             <div className="ml-3">
                 <CommentPost post={props.post}/>
-            </div>
+            </div> */}
         </div>
     </div>
   );

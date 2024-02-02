@@ -34,29 +34,25 @@ const AllUserList = () => {
 
   return (
     <Layout>
-      <div className="w-full h-[85vh] flex items-start mt-10 justify-center p-10">
-        <div className="w-[100%] min-w-[300px] h-[full] max-h-[700px] rounded-xl p-2 flex flex-col shadow-[inset_0px_-22px_38px_-4px_rgba(0,0,0,0.82)]">
-          <div className="w-full h-[25px] p-4 flex items-center justify-center text-white text-lg font-bold border-b-2 drop-shadow-2xl">
-            User list
-          </div>
-          <div className="w-full h-full overflow-scroll">
-            {allUsers?.length > 0 ? (
-              allUsers?.map((user: User, index: any) => {
-                return (
-                  <ModalUserList
-                    key={index}
-                    user={user}
-                    getFollower={getFollower}
-                    closeModal={() => {}}
-                  />
-                );
-              })
-            ) : (
-              <p>No users</p>
-            )}
-          </div>
+        <h1 className="text-2xl font-bold pt-4 pl-8 text-white">All Users</h1>
+        <div className='flex h-calc(100vh-70px) w-full mt-10 justify-center'>
+            <div className="flex-col flex">
+                {allUsers?.length > 0 ? (
+                allUsers?.map((user: User, index: any) => {
+                    return (
+                    <ModalUserList
+                        key={index}
+                        user={user}
+                        getFollower={getFollower}
+                        closeModal={() => {}}
+                    />
+                    );
+                })
+                ) : (
+                    <p className="text-white">No users</p>
+                )}
+            </div>
         </div>
-      </div>
     </Layout>
   );
 };

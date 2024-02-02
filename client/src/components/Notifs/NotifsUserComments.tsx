@@ -13,6 +13,7 @@ import { usePublication } from "../../context/PublicationContext";
 export default function NotifsUserComments(props: {
     notification: Notifications;
     closeModal: () => any;
+    isViewed: boolean;
 }) {
     const { FindUserById, patchNotifications } = useUser();
     const [image, setImage] = useState("");
@@ -79,19 +80,22 @@ export default function NotifsUserComments(props: {
 
     return (
         <div
-            className="flex flex-row justify-between my-5 items-center"
+            className={`flex flex-row justify-between my-5 items-center ${props?.isViewed ? "" : "font-bold"}`}
         >
             <div className="flex flex-row justify-between items-center w-full">
                 <div
-                    className="h-[50px] w-[50px] border-none cursor-pointer"
+                    className="relative h-[50px] w-[50px] border-none cursor-pointer"
                     onClick={() => {
                         Router.push("/user/" + `${props?.notification?.associate_user_id}`);
                     }}
                 >
                     <ProfilPic url_photo={image} />
+                    {!props?.isViewed && <div className="h-[50px] w-[50px] top-0 flex items-center justify-end absolute">
+                        <div className="rounded-full bg-red-500 w-[7px] h-[7px] mt-10"></div>
+                    </div>}
                 </div>
                 <div
-                    className="h-[50px] w-full flex flex-row cursor-pointer"
+                    className="h-[50px] w-[calc(100%-50px)] flex flex-row cursor-pointer"
                     onClick={() => {
                         Router.push("/post/" + `${props?.notification?.publication_id}`);
                     }}

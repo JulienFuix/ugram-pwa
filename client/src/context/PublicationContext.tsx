@@ -4,6 +4,8 @@ import app, { HTTPRequest } from "../api/feathers-config";
 import { AllPostObject } from "../types/AllPostObject";
 import { Post } from "../types/Post";
 import { Comment } from "../types/Comment";
+import { Likes } from "../types/Likes";
+import { AllLikes } from "../types/AllLikes";
 
 const url = process.env.NEXT_PUBLIC_API_URL;
 
@@ -26,6 +28,7 @@ interface PublicationContextInterface {
   removeComment: (id: string) => any;
   getLikesPublication: (id: string) => any;
   AllComments: Array<Comment>;
+  AllLikes: AllLikes;
 }
 
 const PublicationContext = createContext({} as PublicationContextInterface);
@@ -36,6 +39,7 @@ export const PublicationWrapper = ({
   const [isLoading, setIsLoading] = useState(false);
   const [post, setAllPost] = useState<AllPostObject | any>();
   const [AllComments, setAllComments] = useState<Array<Comment> | any>([]);
+  const [AllLikes, setAllLikes] = useState<Array<Comment> | any>([]);
 
   const createPublications = async (
     description: string,
@@ -149,6 +153,7 @@ export const PublicationWrapper = ({
         },
       });
       setIsLoading(false);
+      setAllLikes(res);
       return res;
     } catch (e: any) {
       console.log("error", e);
@@ -238,7 +243,14 @@ export const PublicationWrapper = ({
     getComments(comments.publication_id);
   }
 
+  function getAllLikes(likes: any) {
+    getLikesPublication(likes.publication_id)
+  }
+
   useEffect(() => {
+    app.service('likes').on('removed', (likes: any) => getAllLikes(likes));
+    app.service('likes').on('created', (likes: any) => getAllLikes(likes));
+    app.service('comments').on('created', (comments: any) => getAllComments(comments));
     app.service('comments').on('created', (comments: any) => getAllComments(comments));
   }, []);
 
@@ -259,6 +271,7 @@ export const PublicationWrapper = ({
         removeComment,
         getLikesPublication,
         AllComments,
+        AllLikes,
       }}
     >
       {children}

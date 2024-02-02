@@ -62,24 +62,13 @@ export default function ModalePost(props: ModaleProps) {
         props.changeDisplay(false);
     };
 
-    // const handleClickAddComment = async () => {
-    //     var inputElement = document.getElementById("content-comment") as HTMLInputElement;
-    //     if (inputElement.value != "") {
-    //         var inputValue = inputElement.value;
-    //         let res = await createComments(props.postData.id, inputValue);
-    //         setIsDelete(!isDelete);
-    //         inputElement.value = "";
-    //     }
-    // };
-
     const deleteComment = async (id: string) => {
         let res = await removeComment(id);
         setIsDelete(!isDelete);
     };
 
     const getCommentByPublication = async () => {
-        let res = await getComments(props.postData.id);
-        setallComments(res.reverse());
+        await getComments(props.postData.id);
     };
 
     const handleDisplayChange = (newValue: boolean) => {
@@ -132,7 +121,6 @@ export default function ModalePost(props: ModaleProps) {
 
     useEffect(() => {
         scrollToTop();
-        // getCommentByPublication();
         setallComments(AllComments.reverse());
     }, [AllComments]);
 

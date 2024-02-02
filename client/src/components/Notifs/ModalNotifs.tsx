@@ -15,27 +15,22 @@ type ModalProps = {
 };
 
 function ModalNotifs({ isOpen, closeModal, title }: ModalProps) {
-  const { notifications, patchNotifications } = useUser();
+    const { notifications, patchNotifications } = useUser();
 
-  function patchAllNotifs() {
-    console.log("NOTIFS", notifications);
-    notifications?.map((element: Notifications, index: number) => {
-        if (element?.viewed === false)
-            patchNotifications(element.id);
-    });
-  }
-
-  useEffect(() => {
-    if (isOpen)
-        patchAllNotifs();
-  }, [isOpen]);
+    function patchAllNotifs() {
+        notifications?.map((element: Notifications, index: number) => {
+            if (element?.viewed === false)
+                patchNotifications(element.id);
+        });
+        closeModal();
+    }
 
   return (
     <Transition show={isOpen} as={Fragment}>
       <Dialog
         as="div"
         className="fixed inset-0 z-10 overflow-y-auto"
-        onClose={closeModal}
+        onClose={patchAllNotifs}
       >
         <div className="min-h-screen px-4 text-center">
           <Dialog.Overlay className="fixed inset-0 bg-black opacity-60" />
@@ -44,7 +39,7 @@ function ModalNotifs({ isOpen, closeModal, title }: ModalProps) {
               <h3 className="text-2xl font-medium text-white">{title}</h3>
               <div
                 className=" cursor-pointer text-white focus:outline-none focus:text-gray-700"
-                onClick={closeModal}
+                onClick={patchAllNotifs}
               >
                 <AiOutlineClose size={24} />
               </div>
@@ -52,18 +47,18 @@ function ModalNotifs({ isOpen, closeModal, title }: ModalProps) {
             <div className="mt-4 h-[600px] overflow-y-scroll scrollbar-hide">
               {notifications?.length > 0 &&
                 notifications?.map((element: Notifications, index: number) => {
-                  if (element?.type === "FOLLOW") {
-                    return <NotifsUserFollow key={index} notification={element} closeModal={closeModal}/>;
+                  if (element?.type === "FOLLOW" && element?.associate_user_id !== localStorage.getItem("user_id")) {
+                    return <NotifsUserFollow key={index} notification={element} closeModal={closeModal} isViewed={element.viewed} />;
                   }
-                  if (element?.type === "LIKE") {
-                    return <NotifsUserLike key={index} notification={element} closeModal={closeModal}/>;
+                  if (element?.type === "LIKE" && element?.associate_user_id !== localStorage.getItem("user_id")) {
+                    return <NotifsUserLike key={index} notification={element} closeModal={closeModal} isViewed={element.viewed} />;
                   }
-                  if (element?.type === "COMMENT") {
-                    return <NotifsUserComments key={index} notification={element} closeModal={closeModal}/>;
+                  if (element?.type === "COMMENT" && element?.associate_user_id !== localStorage.getItem("user_id")) {
+                    return <NotifsUserComments key={index} notification={element} closeModal={closeModal} isViewed={element.viewed} />;
                   }
                 })}
               {notifications.length <= 0 && (
-                <p className="text-center text-black text-bold">
+                <p className="text-center text-white text-bold">
                   No Notifications
                 </p>
               )}

@@ -65,13 +65,15 @@ export default function TopBar(props: { setOpen: any; open: boolean }) {
           <div className="w-[30px] h-[70px] flex justify-center items-center">
             <NotifsIconCount />
           </div>
-          <div className="w-[30px] h-[70px] flex justify-center items-center relative">
-            <FiSend className="cursor-pointer text-white" size={25} onClick={() => navigate("/chat")} />
-            {nbNewMessage > 0 && (
-                <div className="absolute bottom-2.5 left-4 px-1.5 py-0.5 bg-red-500 text-white rounded-full text-xs">
-                {nbNewMessage}
+          <div className="w-[30px] h-[70px] flex justify-center items-center">
+            <div className="relative inline-block">
+                <FiSend className="cursor-pointer text-white" size={25} onClick={() => navigate("/chat")} />
+                {nbNewMessage > 0 && (
+                    <div className="absolute bottom-2.5 left-4 px-1.5 py-0.5 bg-red-500 text-white rounded-full text-xs">
+                    {nbNewMessage}
+                </div>
+                )}
             </div>
-            )}
           </div>
         </div>
       </div>

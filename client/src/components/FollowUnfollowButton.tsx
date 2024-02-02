@@ -75,7 +75,7 @@ export const FollowUnfollowButton = (props: {
     return (
       <button
         onClick={handleClick}
-        className={`${"bg-red-500"} text-white font-bold py-2 px-4 rounded`}
+        className={`${"bg-red-500"} text-white py-1 px-3 rounded w-[90px]`}
       >
         {"Unfollow"}
       </button>
@@ -84,7 +84,7 @@ export const FollowUnfollowButton = (props: {
     return (
       <button
         onClick={handleClick}
-        className={`${"bg-green-500"} text-white font-bold py-2 px-4 rounded`}
+        className={`${"bg-green-500"} text-white py-1 px-3 rounded w-[90px]`}
       >
         {"Follow"}
       </button>

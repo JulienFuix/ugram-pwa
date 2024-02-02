@@ -43,7 +43,7 @@ export const ModalUserList = (props: {
           <div className="rounded-full h-12 w-12 align-middle border-none">
             <ProfilPic url_photo={image} />
           </div>
-          <p className="text-[#9c9c9c] pl-4">{props?.user?.username}</p>
+          <div className="w-[200px]"><p className="text-[#9c9c9c] pl-4">{props?.user?.username}</p></div>
         </div>
         <div
           className="cursor-pointer"
