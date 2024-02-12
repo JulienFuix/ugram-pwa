@@ -6,4 +6,4 @@ ligne 2 - 1commit
 
 ligne 3 - 1commit
 
-Ligne 4 - Top branch no reset
+Ligne 4 - Testing reset command
