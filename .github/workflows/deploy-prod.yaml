@@ -1,21 +1,8 @@
 name: CI/CD Pipeline - Production
 
 on:
-  workflow_run:
-    workflows: ["CI/CD Pipeline - Staging"]
-    types:
-      - completed
-  workflow_dispatch:  # Cette section permet le déclenchement manuel
-    inputs:
-      manual-trigger:
-        description: 'Manually trigger the workflow'
-        default: 'true'
-      tag:
-        description: 'Create new production tag'
-        required: true
-      message-tag:
-        description: 'Add message to your tag'
-        required: false
+  release:
+    types: [created]
 
 
 jobs:

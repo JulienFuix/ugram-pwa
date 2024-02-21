@@ -43,8 +43,8 @@ export const AuthWrapper = ({ children }: AuthWrapperInterface) => {
       axios.defaults.headers.common["Authorization"] =
         "Bearer " + res.accessToken;
       setCurrentUser(res?.user);
-      console.log("token", res.accessToken);
-      console.log("id", res);
+    //   console.log("token", res.accessToken);
+    //   console.log("id", res);
       setIsLoading(false);
       router.push("/");
       return res;
